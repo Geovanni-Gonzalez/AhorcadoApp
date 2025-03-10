@@ -1,0 +1,21 @@
+/*index.css*/
+@import "tailwindcss";
+
+:root {
+  --primary: #ff0000;
+  --secondary: #ffffff;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--secondary);
+  color: var(--primary);
+  font-family: 'Roboto', sans-serif;
+}
+
+
