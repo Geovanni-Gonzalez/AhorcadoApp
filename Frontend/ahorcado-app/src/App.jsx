@@ -7,12 +7,12 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/", 
-      element: <HomePage />,
+      element: <HomePage />
     },
     {
-      path: "/player-form", 
-      element: <PlayerForm />,
-    },
+      path: "/player-form",
+      element: <PlayerForm />
+    }
   ]);
 
   return (
