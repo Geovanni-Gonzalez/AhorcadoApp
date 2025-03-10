@@ -1,39 +1,35 @@
-// Importamos las librerías necesarias
 const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-require('dotenv').config(); // Cargar variables de entorno desde .env
+const rutaPalabra = require('./routes/rutaPalabra');
+const rutaPartida = require('./routes/rutaPartida');
+const rutaRonda = require('./routes/rutaRonda');
+const config = require('./config');
+const morgan = require('morgan');
 
 const app = express();
 
-// Configuración de CORS
-const corsOptions = {
-    origin: 'http://localhost:5173',
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true, 
-    optionsSuccessStatus: 200
-};
+app.use(morgan(config.app.env));
 
-// Middleware
-app.use(cors(corsOptions)); 
-app.use(express.json()); // Para manejar JSON en las solicitudes
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Conectar a MongoDB
-const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/ahorcadoDB";
-
-mongoose.connect(MONGO_URI, {
-        }).then(() => {
-            console.log('Conectado a MongoDB');
-        }).catch(err => {
-            console.error('Error al conectar a MongoDB:', err);
-        });
-
-// Importamos las rutas del juego
-const gameRoutes = require('./routes/rutas.js');
-app.use('/', gameRoutes);
-
-// Iniciar el servidor
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => { 
-    console.log(` Server running on port ${PORT}`);
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    
+    if (req.method === 'OPTIONS') {
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE', 'PATCH' );
+        return res.status(200).json({});
+    }
+    next();
 });
+
+app.use('/palabra', rutaPalabra);
+app.use('/partida', rutaPartida);
+app.use('/ronda', rutaRonda);
+
+app.listen(config.app.port, () => {
+    console.log(`Server listening on port ${config.app.port}`);
+});
+
+
+
